@@ -1,0 +1,106 @@
+{
+  "info": {
+    "name": "API de Inventario (Flask + SQLite)",
+    "description": "Pruebas CRUD del proyecto final de Programación para Internet. Ejecuta las peticiones en orden: la de Crear guarda el id del nuevo producto en la variable {{productoId}}.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:5000/api" },
+    { "key": "productoId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "0. Estado de la API",
+      "request": { "method": "GET", "url": "{{baseUrl}}/health" }
+    },
+    {
+      "name": "1. Crear producto",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Responde 201 Created', () => pm.response.to.have.status(201));",
+              "const p = pm.response.json();",
+              "pm.collectionVariables.set('productoId', p.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Galletas de avena 300 g\",\n  \"categoria\": \"Abarrotes\",\n  \"precio\": 35.50,\n  \"stock\": 40,\n  \"descripcion\": \"Paquete individual\"\n}"
+        },
+        "url": "{{baseUrl}}/productos"
+      }
+    },
+    {
+      "name": "2. Consultar todos",
+      "event": [
+        { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Responde 200 OK', () => pm.response.to.have.status(200));"] } }
+      ],
+      "request": { "method": "GET", "url": "{{baseUrl}}/productos" }
+    },
+    {
+      "name": "3. Consultar por ID",
+      "event": [
+        { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Responde 200 OK', () => pm.response.to.have.status(200));"] } }
+      ],
+      "request": { "method": "GET", "url": "{{baseUrl}}/productos/{{productoId}}" }
+    },
+    {
+      "name": "4. Actualizar producto (PUT)",
+      "event": [
+        { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Responde 200 OK', () => pm.response.to.have.status(200));"] } }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Galletas de avena 300 g\",\n  \"categoria\": \"Abarrotes\",\n  \"precio\": 32.00,\n  \"stock\": 55,\n  \"descripcion\": \"Precio de promoción\"\n}"
+        },
+        "url": "{{baseUrl}}/productos/{{productoId}}"
+      }
+    },
+    {
+      "name": "5. Actualizar solo el stock (PATCH)",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"stock\": 50\n}" },
+        "url": "{{baseUrl}}/productos/{{productoId}}"
+      }
+    },
+    {
+      "name": "6. Eliminar producto",
+      "event": [
+        { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Responde 200 OK', () => pm.response.to.have.status(200));"] } }
+      ],
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/productos/{{productoId}}" }
+    },
+    {
+      "name": "7. Error: consultar un id que no existe",
+      "event": [
+        { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Responde 404 Not Found', () => pm.response.to.have.status(404));"] } }
+      ],
+      "request": { "method": "GET", "url": "{{baseUrl}}/productos/{{productoId}}" }
+    },
+    {
+      "name": "8. Error: crear con datos inválidos",
+      "event": [
+        { "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Responde 400 Bad Request', () => pm.response.to.have.status(400));"] } }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"\",\n  \"precio\": -10\n}" },
+        "url": "{{baseUrl}}/productos"
+      }
+    }
+  ]
+}
