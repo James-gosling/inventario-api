@@ -24,8 +24,8 @@ from reportlab.platypus import (BaseDocTemplate, Frame, Image, KeepTogether, Nex
                                 TableStyle)
 
 # ------------------------------------------------------------------ datos editables
-VIDEO_URL = "[pega aquí la liga de YouTube (no listado)]"
-REPO_URL = "[pega aquí la liga del repositorio de GitHub o indica: archivo .zip adjunto]"
+VIDEO_URL = "https://youtu.be/6yqqWiBddgQ"
+REPO_URL = "https://github.com/James-gosling/inventario-api"
 FECHA = "25 de noviembre de 2026"
 # ----------------------------------------------------------------------------------
 
